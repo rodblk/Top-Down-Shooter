@@ -48,9 +48,12 @@ public class PlayerController : Unit
     {
         // Look for colliders in radius
         var targets = Physics.OverlapSphere(transform.position, 3, targetMask);
-        if (targets.Length == 0)
-            transform.rotation = Quaternion.LookRotation(moveDirection);
         // Look at direction of movement
+        if (targets.Length == 0)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveDirection), Time.deltaTime * 5);
+        }
+        // Look at target
         else
         {
             var targetPosition = targets[0].gameObject.transform.position;

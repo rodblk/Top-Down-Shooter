@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class Unit : MonoBehaviour
 {
+    public int hitPoints;
     public float speed;
     // Start is called before the first frame update
     void Start()
