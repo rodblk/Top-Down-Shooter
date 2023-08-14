@@ -14,10 +14,10 @@ TagManager:
   - Water
   - UI
   - Stage
-  - Possible Target
+  - Enemy
   - Player
-  - 
-  - 
+  - Player Bullet
+  - Enemy Bullet
   - 
   - 
   - 
