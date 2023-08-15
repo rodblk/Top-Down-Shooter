@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 501260565408199345}
   - component: {fileID: -5880377467913916105}
   - component: {fileID: 1410554594794630188}
+  - component: {fileID: 5803743018931528486}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
@@ -53,6 +54,7 @@ MonoBehaviour:
   maxHitPoints: 3
   speed: 2
   stopDistance: 5
+  shootDistance: 10
   fireRate: 1
   bullet: {fileID: 5365163447748509285, guid: 3e783330ae3855146afe9f9b1b8dd8b6, type: 3}
   shootingPoint: {fileID: 680979982106871068}
@@ -157,6 +159,26 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!95 &5803743018931528486
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501260565408199356}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b2f256de484332d4e9adfe4f94a4fbf4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &680979982106871068
 GameObject:
   m_ObjectHideFlags: 0

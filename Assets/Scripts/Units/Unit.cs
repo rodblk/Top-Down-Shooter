@@ -34,9 +34,8 @@ public abstract class Unit : MonoBehaviour
         hitPoints = maxHitPoints;
     }
 
-    public void TakeDamage(int damage)
+    public virtual void TakeDamage(int damage)
     {
-        HitPoints -= damage;
     }
 
     public virtual void Die()

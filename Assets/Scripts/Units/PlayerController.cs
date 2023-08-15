@@ -17,6 +17,7 @@ public class PlayerController : Unit
     public static event Action OnPlayerDie;
 
     private Collider currentTarget;
+    private Animator anim;
 
     private Collider CurrentTarget
     {
@@ -49,6 +50,7 @@ public class PlayerController : Unit
     private void Awake()
     {
         _playerControls = new PlayerControls();
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -123,6 +125,12 @@ public class PlayerController : Unit
             }
             yield return null;
         }
+    }
+
+    public override void TakeDamage(int damage)
+    {
+        anim.Play("Take Damage");
+        HitPoints -= damage;
     }
 
     public override void Die()

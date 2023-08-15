@@ -10,6 +10,7 @@ public class EnemyController : Unit
     private Vector3 moveDirection;
     // public LayerMask targetLayer;
     public int stopDistance;
+    public int shootDistance;
     private NavMeshAgent agent;
     
     public int fireRate;
@@ -18,12 +19,14 @@ public class EnemyController : Unit
     private float lastFired;
 
     private bool isShooting;
+    private Animator anim;
 
     public static event Action OnEnemyDestroyed;
 
     private void OnEnable()
     {
         PlayerController.OnPlayerDie += StopShooting;
+        SetHitPoints();
     }
 
     private void OnDisable()
@@ -34,6 +37,7 @@ public class EnemyController : Unit
     // Start is called before the first frame update
     void Start()
     {
+        anim = GetComponent<Animator>();
         targetPlayer = GameObject.FindGameObjectWithTag("Player");
         agent = GetComponent<NavMeshAgent>();
         agent.stoppingDistance = stopDistance;
@@ -53,7 +57,7 @@ public class EnemyController : Unit
             return;
         }
 
-        if ((transform.position - targetPlayer.transform.position).magnitude < stopDistance && !isShooting)
+        if ((transform.position - targetPlayer.transform.position).magnitude < shootDistance && !isShooting)
         {
             isShooting = true;
             StartCoroutine(StartShooting());
@@ -64,6 +68,12 @@ public class EnemyController : Unit
             StopCoroutine(StartShooting());
         }
         
+    }
+
+    public override void TakeDamage(int damage)
+    {
+        anim.Play("Take Damage");
+        HitPoints -= damage;
     }
 
     public override void Die()
