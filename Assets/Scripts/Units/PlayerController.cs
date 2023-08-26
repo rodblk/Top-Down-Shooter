@@ -137,6 +137,7 @@ public class PlayerController : Unit
     {
         OnPlayerDie?.Invoke();
         base.Die();
+        Time.timeScale = 0;
     }
 
     // Usa para ver raio

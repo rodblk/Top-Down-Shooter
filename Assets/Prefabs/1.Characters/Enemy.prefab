@@ -53,7 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHitPoints: 3
   speed: 2
-  stopDistance: 5
+  stopDistance: 3
   shootDistance: 10
   fireRate: 1
   bullet: {fileID: 5365163447748509285, guid: 3e783330ae3855146afe9f9b1b8dd8b6, type: 3}
