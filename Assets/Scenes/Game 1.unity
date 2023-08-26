@@ -761,8 +761,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stages:
-  - {fileID: 5834336357616217955, guid: fdd6ae0059b6a2740a2d38ed8a704119, type: 3}
   - {fileID: 5834336357616217955, guid: 40397e2a13486e147b56a05b9db21c8b, type: 3}
+  - {fileID: 5834336357616217955, guid: fdd6ae0059b6a2740a2d38ed8a704119, type: 3}
   - {fileID: 5834336357616217955, guid: ad2c3ff7fa5799a4bbbe8fe47937a9c0, type: 3}
   playerPrefab: {fileID: 7864257944867598062, guid: 4fd1c287b26ad674da853bea7a87243c, type: 3}
   enemyPrefab: {fileID: 501260565408199356, guid: 1d4e56919ee0c684381dcecf3c01e6b9, type: 3}
