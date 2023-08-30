@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
-using UnityEditor.AI;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;

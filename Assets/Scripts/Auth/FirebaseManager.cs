@@ -19,13 +19,25 @@ public class FirebaseManager : MonoBehaviour
     private Firebase.Auth.FirebaseAuth auth;
     private Firebase.Auth.FirebaseUser user;
 
-    public TextMeshProUGUI UserNameTxt, UserEmailTxt;
-    public Image UserProfilePic;
-    public string imageUrl;
+    public TextMeshProUGUI UserNameTxt;
     public GameObject LoginScreen, ProfileScreen;
+
+    public static FirebaseManager instance;
+
+    public FirebaseUser User => user;
 
     private void Awake()
     {
+        if (!instance)
+        {
+            instance = this;
+            DontDestroyOnLoad(this);
+        }
+        else
+        {
+            Destroy(this);
+        }
+        
         // Configure webAPI key with google
         configuration = new GoogleSignInConfiguration
         {
@@ -44,7 +56,7 @@ public class FirebaseManager : MonoBehaviour
         auth = FirebaseAuth.DefaultInstance;
     }
 
-    void GoogleSignInClick()
+    public void GoogleSignInClick()
     {
         GoogleSignIn.Configuration = configuration;
         GoogleSignIn.Configuration.UseGameSignIn = false;
@@ -59,6 +71,9 @@ public class FirebaseManager : MonoBehaviour
         if (task.IsFaulted)
         {
             Debug.LogError("Fault");
+            Debug.LogError(task.Result);
+            Debug.LogError(task.Exception);
+            Debug.LogError(task.Status);
         }
         else if (task.IsCanceled)
         {
@@ -86,32 +101,35 @@ public class FirebaseManager : MonoBehaviour
                 user = auth.CurrentUser;
 
                 UserNameTxt.text = user.DisplayName;
-                UserEmailTxt.text = user.Email;
-
+                // UserEmailTxt.text = user.Email;
+                //
                 LoginScreen.SetActive(false);
                 ProfileScreen.SetActive(true);
 
-                StartCoroutine(LoadImage(CheckImageUrl(user.PhotoUrl.ToString())));
+                Debug.Log(user.DisplayName);
+                Debug.Log(user.Email);
+
+                // StartCoroutine(LoadImage(CheckImageUrl(user.PhotoUrl.ToString())));
             });
         }
     }
 
-    private string CheckImageUrl(string url)
-    {
-        if (!string.IsNullOrEmpty(url))
-        {
-            return url;
-        }
+    // private string CheckImageUrl(string url)
+    // {
+    //     if (!string.IsNullOrEmpty(url))
+    //     {
+    //         return url;
+    //     }
+    //
+    //     return imageUrl;
+    // }
 
-        return imageUrl;
-    }
-
-    IEnumerator LoadImage(string imageUrl)
-    {
-        WWW www = new WWW(imageUrl);
-        yield return www;
-        
-        UserProfilePic.sprite = Sprite.Create(www.texture, new Rect(0, 0, 
-            www.texture.width, www.texture.height), new Vector2(0, 0));
-    }
+    // IEnumerator LoadImage(string imageUrl)
+    // {
+    //     WWW www = new WWW(imageUrl);
+    //     yield return www;
+    //     
+    //     UserProfilePic.sprite = Sprite.Create(www.texture, new Rect(0, 0, 
+    //         www.texture.width, www.texture.height), new Vector2(0, 0));
+    // }
 }

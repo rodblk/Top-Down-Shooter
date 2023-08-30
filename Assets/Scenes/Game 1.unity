@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 3c812177893e8c444a67793f63edff7f, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -4420,19 +4420,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcda8c8e767db0840b87bd2df4ec4872, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rankingPanel: {fileID: 681718671}
-  playerBestScoreTxt: {fileID: 1789842650}
-  rankingRows:
-  - {fileID: 1691452335}
-  - {fileID: 1823454460}
-  - {fileID: 888243752}
-  - {fileID: 1763324248}
-  - {fileID: 761054729}
-  - {fileID: 1553137347}
-  - {fileID: 1583263202}
-  - {fileID: 83753461}
-  - {fileID: 1780781357}
-  - {fileID: 152153946}
 --- !u!4 &1982637595
 Transform:
   m_ObjectHideFlags: 0

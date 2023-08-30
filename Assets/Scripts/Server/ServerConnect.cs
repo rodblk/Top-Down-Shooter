@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using SignInSample;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -9,27 +10,30 @@ namespace Server
 {
     public class ServerConnect: MonoBehaviour
     {
-        [SerializeField] private GameObject rankingPanel;
-        [SerializeField] private TextMeshProUGUI playerBestScoreTxt;
-        [SerializeField] private List<GameObject> rankingRows; 
+        // [SerializeField] private GameObject rankingPanel;
+        // [SerializeField] private TextMeshProUGUI playerBestScoreTxt;
+        // [SerializeField] private List<GameObject> rankingRows; 
         
         public static ServerConnect instance;
 
         private void Start()
         {
             if (!instance)
+            {
                 instance = this;
+                DontDestroyOnLoad(this);
+            }
             else
                 Destroy(this);
         }
 
-        public IEnumerator SaveScoreToMySQL(string username, int score)
+        public IEnumerator SaveScoreToMySQL(string username, int score, List<GameObject> rankingRows, TextMeshProUGUI playerBestScoreTxt, GameObject rankingPanel)
         {
             WWWForm form = new WWWForm();
             form.AddField("username", username);
             form.AddField("score", score);
 
-            UnityWebRequest request = UnityWebRequest.Post("http://localhost/shootersql/register_score.php", form);
+            UnityWebRequest request = UnityWebRequest.Post("http://192.168.1.18/shootersql/register_score.php", form);
         
             yield return request.SendWebRequest();
         
@@ -62,6 +66,27 @@ namespace Server
             request.Dispose();
             
             rankingPanel.SetActive(true);
+        }
+
+        public IEnumerator GetPlayerHighScore(TextMeshProUGUI playerBestScoreTxt)
+        {
+            WWWForm form = new WWWForm();
+            form.AddField("username", SigninSampleScript.instance.user.DisplayName);
+            
+            UnityWebRequest request = UnityWebRequest.Post("http://192.168.1.18/shootersql/get_player_info.php", form);
+
+            yield return request.SendWebRequest();
+            
+            if (request.error == null)
+            {
+                // var result = request.downloadHandler.text;
+
+                playerBestScoreTxt.text = $"Best score: {request.downloadHandler.text}";
+            }
+            else
+                Debug.Log("Data retrieve failed");
+            
+            request.Dispose();
         }
     }
 }

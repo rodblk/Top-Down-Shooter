@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "266029706545",
+    "project_id": "top-down-shooter-9155c",
+    "storage_bucket": "top-down-shooter-9155c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:266029706545:android:425cf6219dfbb968981410",
+        "android_client_info": {
+          "package_name": "com.rod.topdownshooter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "266029706545-1ef8qeap8kks6htjjrbh5oe0rd5q29gl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtiokJu03GVkvEXemNYO_3cqTb8Jhp9Zo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "266029706545-1ef8qeap8kks6htjjrbh5oe0rd5q29gl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

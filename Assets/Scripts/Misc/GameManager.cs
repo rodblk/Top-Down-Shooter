@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
 
     public void SaveScore()
     {
-        StartCoroutine(ServerConnect.instance.SaveScoreToMySQL(username, score));
+        // StartCoroutine(ServerConnect.instance.SaveScoreToMySQL(username, score));
     }
 
     // IEnumerator SaveScore(string username, int score)
