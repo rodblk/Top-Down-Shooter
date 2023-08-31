@@ -75,6 +75,8 @@ namespace SignInSample {
     public void OnDisconnect() {
       AddStatusText("Calling Disconnect");
       GoogleSignIn.DefaultInstance.Disconnect();
+      
+      SceneManager.LoadScene("Login");
     }
 
     internal void OnAuthenticationFinished(Task<GoogleSignInUser> task) {

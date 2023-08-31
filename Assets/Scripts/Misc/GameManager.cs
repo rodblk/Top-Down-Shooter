@@ -3,15 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Server;
+using SignInSample;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] public string username;
+    // [SerializeField] public string username;
     [SerializeField] private int score;
     [SerializeField] private TextMeshProUGUI playerScoreTxt;
+    
+    [SerializeField] private GameObject rankingPanel;
+    [SerializeField] private TextMeshProUGUI playerBestScoreTxt;
+    [SerializeField] private List<GameObject> rankingRows; 
 
     private void OnEnable()
     {
@@ -29,7 +35,7 @@ public class GameManager : MonoBehaviour
     {
         score = 0;
         playerScoreTxt.text = $"Score: {score}";
-        username = "rod";
+        // username = "rod";
     }
 
     private void AddScore()
@@ -38,9 +44,20 @@ public class GameManager : MonoBehaviour
         playerScoreTxt.text = $"Score: {score}";
     }
 
+    public void GoToProfile()
+    {
+        SceneManager.LoadScene("Profile");
+    }
+
+    public void Retry()
+    {
+        rankingPanel.SetActive(false);
+        StageManager.instance.ResetStage();
+    }
+
     public void SaveScore()
     {
-        // StartCoroutine(ServerConnect.instance.SaveScoreToMySQL(username, score));
+        StartCoroutine(ServerConnect.instance.SaveScoreToMySQL(SigninSampleScript.instance.user.DisplayName, score, rankingRows, playerBestScoreTxt, rankingPanel));
     }
 
     // IEnumerator SaveScore(string username, int score)

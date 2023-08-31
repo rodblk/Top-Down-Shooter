@@ -11,13 +11,18 @@ public class ProfileManager : MonoBehaviour
     public TextMeshProUGUI username, bestScore;
     void Start()
     {
-        // username.text = SigninSampleScript.instance.user.DisplayName;
-        //
-        // StartCoroutine(ServerConnect.instance.GetPlayerHighScore(bestScore));
+        username.text = SigninSampleScript.instance.user.DisplayName;
+        
+        StartCoroutine(ServerConnect.instance.GetPlayerHighScore(bestScore));
     }
 
     public void Play()
     {
         SceneManager.LoadScene("Game 1");
+    }
+
+    public void Logout()
+    {
+        SigninSampleScript.instance.OnSignOut();
     }
 }

@@ -16,6 +16,8 @@ public class StageManager : MonoBehaviour
 
     [SerializeField] private Image blackScreen;
 
+    public static StageManager instance;
+
     private float positionX;
     private float positionZ;
 
@@ -44,6 +46,18 @@ public class StageManager : MonoBehaviour
     {
         FinishSpace.OnFinishStage -= ChangeStage;
         EnemyController.OnEnemyDestroyed -= EnemyDestroyed;
+    }
+
+    private void Awake()
+    {
+        if (!instance)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
     }
 
     private void Start()
@@ -95,6 +109,11 @@ public class StageManager : MonoBehaviour
 
     public void ChangeStage()
     {
+        StartCoroutine(HideGame(NextStage));
+    }
+
+    public void Retry()
+    {
         StartCoroutine(HideGame(ResetStage));
     }
 
@@ -136,7 +155,7 @@ public class StageManager : MonoBehaviour
             callback();
     }
 
-    public void ResetStage()
+    public void NextStage()
     {
         Destroy(currentStage);
         Destroy(finishSpace);
@@ -148,6 +167,23 @@ public class StageManager : MonoBehaviour
             enemiesQty += 2;
         }
         
+        enemiesDestroyed = 0;
+        
+        currentStage = Instantiate(stages[stagesCleared]);
+        currentStage.GetComponentInChildren<NavMeshSurface>().BuildNavMesh();
+        player.transform.position = startPosition;
+
+        StartCoroutine(ShowGame(SpawnEnemies));
+    }
+    public void ResetStage()
+    {
+        Destroy(currentStage);
+        Destroy(finishSpace);
+        
+        stagesCleared = 0;
+        enemiesDestroyed = 0;
+        enemiesQty = 3;
+
         enemiesDestroyed = 0;
         
         currentStage = Instantiate(stages[stagesCleared]);
