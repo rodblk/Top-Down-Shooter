@@ -109,7 +109,6 @@ public class StageManager : MonoBehaviour
 
     public void ChangeStage()
     {
-        Debug.Log("CHAMOU MUDANCA DE STAGE");
         StartCoroutine(HideGame(NextStage));
     }
 

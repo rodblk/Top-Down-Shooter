@@ -86,25 +86,4 @@ public class GameManager : MonoBehaviour
         }
         
     }
-
-    // IEnumerator SaveScore(string username, int score)
-    // {
-    //     WWWForm form = new WWWForm();
-    //     form.AddField("username", username);
-    //     form.AddField("score", score);
-    //
-    //     UnityWebRequest request = UnityWebRequest.Post("http://localhost/shootersql/register_score.php", form);
-    //     
-    //     yield return request.SendWebRequest();
-    //     
-    //     Debug.Log(request.result);
-    //     Debug.Log(request.error);
-    //     Debug.Log(request.downloadHandler.text);
-    //     
-    //     if (request.error == null)
-    //         Debug.Log("Data insert success");
-    //     else
-    //         Debug.Log("Data insert failed");
-    //
-    // }
 }

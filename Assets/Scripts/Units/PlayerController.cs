@@ -26,11 +26,12 @@ public class PlayerController : Unit
             if (value != null && currentTarget != value)
             {
                 currentTarget = value;
-                StartCoroutine(nameof(StartShooting));
+                Invoke(nameof(CallShooting), 0.1f);
             }
             else if (value == null)
             {
                 currentTarget = null;
+                CancelInvoke();
                 StopCoroutine(nameof(StartShooting));
             }
         }
@@ -126,6 +127,11 @@ public class PlayerController : Unit
         {
             CurrentTarget = null;
         }
+    }
+
+    public void CallShooting()
+    {
+        StartCoroutine(nameof(StartShooting));
     }
 
     IEnumerator StartShooting()
