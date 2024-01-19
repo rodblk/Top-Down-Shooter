@@ -109,6 +109,7 @@ public class StageManager : MonoBehaviour
 
     public void ChangeStage()
     {
+        Debug.Log("CHAMOU MUDANCA DE STAGE");
         StartCoroutine(HideGame(NextStage));
     }
 
@@ -179,16 +180,28 @@ public class StageManager : MonoBehaviour
     {
         Destroy(currentStage);
         Destroy(finishSpace);
+
+        var enemies = FindObjectsOfType<EnemyController>();
+        foreach (var enemy in enemies)
+        {
+            Destroy(enemy.gameObject);
+        }
         
+        var bullets = FindObjectsOfType<Bullet>();
+        foreach (var bullet in bullets)
+        {
+            Destroy(bullet.gameObject);
+        }
+
+        FindObjectOfType<GameManager>().Score = 0;
         stagesCleared = 0;
         enemiesDestroyed = 0;
         enemiesQty = 3;
 
-        enemiesDestroyed = 0;
-        
         currentStage = Instantiate(stages[stagesCleared]);
         currentStage.GetComponentInChildren<NavMeshSurface>().BuildNavMesh();
-        player.transform.position = startPosition;
+        player = Instantiate(playerPrefab);
+        startPosition = player.transform.position;
 
         StartCoroutine(ShowGame(SpawnEnemies));
     }

@@ -17,7 +17,17 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] private GameObject rankingPanel;
     [SerializeField] private TextMeshProUGUI playerBestScoreTxt;
-    [SerializeField] private List<GameObject> rankingRows; 
+    [SerializeField] private List<GameObject> rankingRows;
+
+    public int Score
+    {
+        get => score;
+        set
+        {
+            score = value;
+            playerScoreTxt.text = $"Score: {score}";
+        }
+    }
 
     private void OnEnable()
     {
@@ -33,15 +43,15 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        score = 0;
-        playerScoreTxt.text = $"Score: {score}";
+        Score = 0;
+        // playerScoreTxt.text = $"Score: {score}";
         // username = "rod";
     }
 
     private void AddScore()
     {
-        score++;
-        playerScoreTxt.text = $"Score: {score}";
+        Score++;
+        // playerScoreTxt.text = $"Score: {score}";
     }
 
     public void GoToProfile()
@@ -51,13 +61,30 @@ public class GameManager : MonoBehaviour
 
     public void Retry()
     {
+        Time.timeScale = 1;
         rankingPanel.SetActive(false);
         StageManager.instance.ResetStage();
     }
 
     public void SaveScore()
     {
-        StartCoroutine(ServerConnect.instance.SaveScoreToMySQL(SigninSampleScript.instance.user.DisplayName, score, rankingRows, playerBestScoreTxt, rankingPanel));
+        try
+        {
+            StartCoroutine(
+                ServerConnect.instance.SaveScoreToMySQL(SigninSampleScript.instance.user.DisplayName, Score));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            Debug.Log("Could not access database");
+            // throw;
+        }
+        finally
+        {
+            // Chama pra mostrar highscore
+            ScoreManager.instance.ShowHighScore();
+        }
+        
     }
 
     // IEnumerator SaveScore(string username, int score)

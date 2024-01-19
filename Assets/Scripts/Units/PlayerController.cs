@@ -102,12 +102,27 @@ public class PlayerController : Unit
     void SeekTarget()
     {
         var targets = Physics.OverlapSphere(transform.position, 8, targetMask);
-        if (targets.Length > 0)
+
+        float closestDistance = Mathf.Infinity;
+        Collider closestCollider = null;
+
+        foreach (var target in targets)
         {
-            CurrentTarget = targets[0];
+            float distance = Vector3.Distance(transform.position, target.transform.position);
+
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestCollider = target;
+            }
+        }
+
+        if (closestCollider != null)
+        {
+            CurrentTarget = closestCollider;
             LookAtTarget();
         }
-        else if(targets.Length <= 0)
+        else
         {
             CurrentTarget = null;
         }
@@ -141,18 +156,18 @@ public class PlayerController : Unit
     }
 
     // Usa para ver raio
-    // public void OnDrawGizmos()
-    // {
-    //     var collider = GetComponent<Collider>();
-    //
-    //     if (!collider)
-    //     {
-    //         return; // nothing to do without a collider
-    //     }
-    //
-    //     Vector3 closestPoint = collider.ClosestPoint(transform.position);
-    //
-    //     Gizmos.DrawSphere(transform.position, 3f);
-    //     Gizmos.DrawWireSphere(closestPoint, 3f);
-    // }
+    public void OnDrawGizmos()
+    {
+        var collider = GetComponent<Collider>();
+    
+        if (!collider)
+        {
+            return; // nothing to do without a collider
+        }
+    
+        Vector3 closestPoint = collider.ClosestPoint(transform.position);
+    
+        Gizmos.DrawSphere(transform.position, 8f);
+        Gizmos.DrawWireSphere(closestPoint, 8f);
+    }
 }
