@@ -55,7 +55,8 @@ namespace Server
         public enum DBNames
         {
             MySQL,
-            Postgres
+            Postgres,
+            Mongo
         }
 
         public IEnumerator GetScores(DBNames dbname, int limit = 10, System.Action<ScoreEntry[]> onComplete = null)
@@ -68,6 +69,9 @@ namespace Server
                     break;
                 case DBNames.Postgres:
                     path = "scores-pg";
+                    break;
+                case DBNames.Mongo:
+                    path = "scores-mongo";
                     break;
                 default:
                     path = "scores";
@@ -105,6 +109,9 @@ namespace Server
                 case DBNames.Postgres:
                     path = "scores-pg";
                     break;
+                case DBNames.Mongo:
+                    path = "scores-mongo";
+                    break;
                 default:
                     path = "scores";
                     break;
@@ -113,6 +120,8 @@ namespace Server
             using var req = UnityWebRequest.Get($"{BASE_URL}/{path}?name={UnityWebRequest.EscapeURL(playerName)}");
             req.SetRequestHeader("Content-Type", "application/json");
 
+            Debug.Log($"{BASE_URL}/{path}?name={UnityWebRequest.EscapeURL(playerName)}");
+            
             yield return req.SendWebRequest();
 
             if (req.result == UnityWebRequest.Result.Success)
@@ -142,6 +151,9 @@ namespace Server
                     break;
                 case DBNames.Postgres:
                     path = "scores-pg";
+                    break;
+                case DBNames.Mongo:
+                    path = "scores-mongo";
                     break;
                 default:
                     path = "scores";
@@ -177,13 +189,13 @@ namespace Server
             // Inicia as 4 requisições ao mesmo tempo
             var mysqlReq    = StartCoroutine(PostScore(DBNames.MySQL,    playerName, score));
             var postgresReq = StartCoroutine(PostScore(DBNames.Postgres, playerName, score));
-            // var mongoReq    = StartCoroutine(PostScore(mongoUrl,    json, "MongoDB"));
+            var mongoReq    = StartCoroutine(PostScore(DBNames.Mongo,    playerName, score));
             // var dynamoReq   = StartCoroutine(PostScore(dynamoUrl,   json, "DynamoDB"));
  
             // Espera todas terminarem
             yield return mysqlReq;
             yield return postgresReq;
-            // yield return mongoReq;
+            yield return mongoReq;
             // yield return dynamoReq;
  
             Debug.Log("Pontuação enviada para todos os bancos.");
