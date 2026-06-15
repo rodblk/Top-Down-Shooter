@@ -13,7 +13,8 @@ public class ProfileManager : MonoBehaviour
     {
         username.text = SigninSampleScript.instance.user.DisplayName;
         
-        StartCoroutine(ServerConnect.instance.GetPlayerHighScore(bestScore));
+        // AQUI VAI A MAIOR PONTUACAO DO JOGADOR
+        //StartCoroutine(ServerConnect.instance.GetPlayerHighScore(bestScore));
     }
 
     public void Play()

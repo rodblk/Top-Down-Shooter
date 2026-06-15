@@ -19,6 +19,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI playerBestScoreTxt;
     [SerializeField] private List<GameObject> rankingRows;
 
+    private float mainGameAreaWidth = 10f;
+    private float mainGameAreaHeight = 10f;
+    private float cameraSize = 5f;
+
     public int Score
     {
         get => score;
@@ -46,6 +50,23 @@ public class GameManager : MonoBehaviour
         Score = 0;
         // playerScoreTxt.text = $"Score: {score}";
         // username = "rod";
+
+        float screenRatio = (float)Screen.width / (float)Screen.height;
+        float targetRatio = mainGameAreaWidth / mainGameAreaHeight;
+
+        if (screenRatio >= targetRatio)
+        {
+            Camera.main.orthographicSize = cameraSize;
+        }
+        else
+        {
+            float differenceInSize = targetRatio / screenRatio;
+            Camera.main.orthographicSize = cameraSize * differenceInSize;
+        }
+
+        Debug.Log($"TENTA CONECTAR");
+        StartCoroutine(ServerConnect.instance.GetScores());
+        // StartCoroutine(ServerConnect.instance.PostScore("Miguel", 12));
     }
 
     private void AddScore()
@@ -70,8 +91,8 @@ public class GameManager : MonoBehaviour
     {
         try
         {
-            StartCoroutine(
-                ServerConnect.instance.SaveScoreToMySQL(SigninSampleScript.instance.user.DisplayName, Score));
+            // StartCoroutine(ServerConnect.instance.PostScore(SigninSampleScript.instance.user.DisplayName, Score));
+            StartCoroutine(ServerConnect.instance.PostScore("Miguel", 12));
         }
         catch (Exception e)
         {

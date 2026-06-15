@@ -81,6 +81,7 @@ namespace SignInSample {
 
     internal void OnAuthenticationFinished(Task<GoogleSignInUser> task) {
       if (task.IsFaulted) {
+        Debug.Log($"DEU RUIM");
         using (IEnumerator<System.Exception> enumerator =
                 task.Exception.InnerExceptions.GetEnumerator()) {
           if (enumerator.MoveNext()) {
@@ -92,12 +93,15 @@ namespace SignInSample {
           }
         }
       } else if(task.IsCanceled) {
+        Debug.Log($"DEU RUIM 2");
         AddStatusText("Canceled");
       } else  {
+        Debug.Log($"DEU BOM?");
         AddStatusText("Welcome: " + task.Result.DisplayName + "!");
         
         user = task.Result;
 
+        Debug.Log($"TROCA DE CENA");
         SceneManager.LoadScene("Profile");
       }
     }

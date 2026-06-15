@@ -48,8 +48,12 @@ public class EnemyController : Unit
     {
         if (targetPlayer)
         {
-            agent.SetDestination(targetPlayer.transform.position);
-            transform.LookAt(targetPlayer.transform);
+            // Debug.Log($"TA ATIVO {agent.isActiveAndEnabled} TA NO MESH {agent.isOnNavMesh}");
+            // if (agent.isActiveAndEnabled && agent.isOnNavMesh)
+            // {
+                agent.SetDestination(targetPlayer.transform.position);
+                transform.LookAt(targetPlayer.transform);
+            // }
         }
         else
         {
