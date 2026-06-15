@@ -48,8 +48,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Score = 0;
-        // playerScoreTxt.text = $"Score: {score}";
-        // username = "rod";
 
         float screenRatio = (float)Screen.width / (float)Screen.height;
         float targetRatio = mainGameAreaWidth / mainGameAreaHeight;
@@ -63,10 +61,6 @@ public class GameManager : MonoBehaviour
             float differenceInSize = targetRatio / screenRatio;
             Camera.main.orthographicSize = cameraSize * differenceInSize;
         }
-
-        Debug.Log($"TENTA CONECTAR");
-        StartCoroutine(ServerConnect.instance.GetScores());
-        // StartCoroutine(ServerConnect.instance.PostScore("Miguel", 12));
     }
 
     private void AddScore()
@@ -91,8 +85,7 @@ public class GameManager : MonoBehaviour
     {
         try
         {
-            // StartCoroutine(ServerConnect.instance.PostScore(SigninSampleScript.instance.user.DisplayName, Score));
-            StartCoroutine(ServerConnect.instance.PostScore("Miguel", 12));
+            StartCoroutine(ServerConnect.instance.PostScore(ServerConnect.DBNames.MySQL, SigninSampleScript.instance.user.DisplayName, Score));
         }
         catch (Exception e)
         {

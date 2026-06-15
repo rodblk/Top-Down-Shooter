@@ -51,6 +51,12 @@ namespace Server
         {
             public string message;
         }
+
+        public enum DBNames
+        {
+            MySQL,
+            Postgres
+        }
         
         // public IEnumerator SaveScoreToMySQL(string username, int score)
         // {
@@ -95,9 +101,23 @@ namespace Server
         //     request.Dispose();
         // }
         
-        public IEnumerator GetScores(int limit = 10)
+        public IEnumerator GetScores(DBNames dbname, int limit = 10, System.Action<ScoreEntry[]> onComplete = null)
         {
-            using var req = UnityWebRequest.Get($"{BASE_URL}/scores?limit={limit}");
+            string path;
+            switch (dbname)
+            {
+                case DBNames.MySQL:
+                    path = "scores";
+                    break;
+                case DBNames.Postgres:
+                    path = "scores-pg";
+                    break;
+                default:
+                    path = "scores";
+                    break;
+            }
+            
+            using var req = UnityWebRequest.Get($"{BASE_URL}/{path}?limit={limit}");
             req.SetRequestHeader("Content-Type", "application/json");
  
             yield return req.SendWebRequest();
@@ -106,25 +126,72 @@ namespace Server
             {
                 var res = JsonUtility.FromJson<ScoresResponse>(req.downloadHandler.text);
                 Debug.Log($"Scores recebidos: {res.scores.Length} entradas");
-                foreach (var entry in res.scores)
-                {
-                    Debug.Log(entry.Name);
-                    Debug.Log(entry.Score);
-                }
+                onComplete?.Invoke(res.scores);
             }
             else
             {
                 Debug.LogError("Erro ao buscar scores: " + req.downloadHandler.text);
-                // onComplete?.Invoke(null);
+                onComplete?.Invoke(null);
             }
         }
         
-        public IEnumerator PostScore(string playerName, int score)
+        public IEnumerator GetScoreByName(DBNames dbname, string playerName, TextMeshProUGUI text)
         {
+            string path;
+            switch (dbname)
+            {
+                case DBNames.MySQL:
+                    path = "scores";
+                    break;
+                case DBNames.Postgres:
+                    path = "scores-pg";
+                    break;
+                default:
+                    path = "scores";
+                    break;
+            }
+            
+            using var req = UnityWebRequest.Get($"{BASE_URL}/{path}?name={UnityWebRequest.EscapeURL(playerName)}");
+            req.SetRequestHeader("Content-Type", "application/json");
+
+            yield return req.SendWebRequest();
+
+            if (req.result == UnityWebRequest.Result.Success)
+            {
+                var res = JsonUtility.FromJson<ScoresResponse>(req.downloadHandler.text);
+                Debug.Log(res);
+                if (res != null)
+                    text.text = "Best score: " + res.scores[0].Score.ToString();
+                else
+                    text.text = "Best score: " + "0";
+            }
+            else
+            {
+                Debug.LogError("Erro ao buscar score: " + req.downloadHandler.text);
+                text.text = "Best score: " + "0";
+            }
+        }
+        
+        public IEnumerator PostScore(DBNames dbname, string playerName, int score)
+        {
+            string path;
+            switch (dbname)
+            {
+                case DBNames.MySQL:
+                    path = "scores";
+                    break;
+                case DBNames.Postgres:
+                    path = "scores-pg";
+                    break;
+                default:
+                    path = "scores";
+                    break;
+            }
+            
             var bodyData = new PostScoreBody { name = playerName, score = score };
             string json = JsonUtility.ToJson(bodyData);
  
-            using var req = new UnityWebRequest($"{BASE_URL}/scores", "POST");
+            using var req = new UnityWebRequest($"{BASE_URL}/{path}", "POST");
             req.uploadHandler   = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
             req.downloadHandler = new DownloadHandlerBuffer();
             req.SetRequestHeader("Content-Type", "application/json");
@@ -135,12 +202,10 @@ namespace Server
             {
                 var res = JsonUtility.FromJson<PostScoreResponse>(req.downloadHandler.text);
                 Debug.Log("Score enviado: " + res.message);
-                // onComplete?.Invoke(res.message);
             }
             else
             {
                 Debug.LogError("Erro ao enviar score: " + req.downloadHandler.text);
-                // onComplete?.Invoke(null);
             }
         }
 
