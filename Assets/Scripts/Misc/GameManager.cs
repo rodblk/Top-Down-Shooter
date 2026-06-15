@@ -83,8 +83,8 @@ public class GameManager : MonoBehaviour
     public void SaveScore()
     {
         Debug.Log("E PRA SUBIR PONTUACAO");
-
-        StartCoroutine(ServerConnect.instance.SaveScoreEverywhere("Robson", score, () =>
+        
+        StartCoroutine(ServerConnect.instance.SaveScoreEverywhere(SigninSampleScript.instance.user.DisplayName, score, () =>
         {
             ScoreManager.instance.ShowHighScore();
         }));

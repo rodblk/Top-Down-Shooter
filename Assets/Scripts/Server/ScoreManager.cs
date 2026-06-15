@@ -77,8 +77,8 @@ public class ScoreManager : MonoBehaviour
             }
         }));
 
-        // StartCoroutine(ServerConnect.instance.GetScoreByName(currentDB, SigninSampleScript.instance.user.DisplayName, playerBestScoreTxt));
-        StartCoroutine(ServerConnect.instance.GetScoreByName(currentDB, "Rodrigo", playerBestScoreTxt));
+        StartCoroutine(ServerConnect.instance.GetScoreByName(currentDB, SigninSampleScript.instance.user.DisplayName, playerBestScoreTxt));
+        // StartCoroutine(ServerConnect.instance.GetScoreByName(currentDB, "Rodrigo", playerBestScoreTxt));
 
     }
 

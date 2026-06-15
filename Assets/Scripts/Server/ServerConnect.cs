@@ -56,7 +56,8 @@ namespace Server
         {
             MySQL,
             Postgres,
-            Mongo
+            Mongo,
+            Dynamo
         }
 
         public IEnumerator GetScores(DBNames dbname, int limit = 10, System.Action<ScoreEntry[]> onComplete = null)
@@ -72,6 +73,9 @@ namespace Server
                     break;
                 case DBNames.Mongo:
                     path = "scores-mongo";
+                    break;
+                case DBNames.Dynamo:
+                    path = "scores-dynamo";
                     break;
                 default:
                     path = "scores";
@@ -111,6 +115,9 @@ namespace Server
                     break;
                 case DBNames.Mongo:
                     path = "scores-mongo";
+                    break;
+                case DBNames.Dynamo:
+                    path = "scores-dynamo";
                     break;
                 default:
                     path = "scores";
@@ -155,6 +162,9 @@ namespace Server
                 case DBNames.Mongo:
                     path = "scores-mongo";
                     break;
+                case DBNames.Dynamo:
+                    path = "scores-dynamo";
+                    break;
                 default:
                     path = "scores";
                     break;
@@ -190,13 +200,13 @@ namespace Server
             var mysqlReq    = StartCoroutine(PostScore(DBNames.MySQL,    playerName, score));
             var postgresReq = StartCoroutine(PostScore(DBNames.Postgres, playerName, score));
             var mongoReq    = StartCoroutine(PostScore(DBNames.Mongo,    playerName, score));
-            // var dynamoReq   = StartCoroutine(PostScore(dynamoUrl,   json, "DynamoDB"));
+            var dynamoReq   = StartCoroutine(PostScore(DBNames.Dynamo,   playerName, score));
  
             // Espera todas terminarem
             yield return mysqlReq;
             yield return postgresReq;
             yield return mongoReq;
-            // yield return dynamoReq;
+            yield return dynamoReq;
  
             Debug.Log("Pontuação enviada para todos os bancos.");
             onAllDone?.Invoke();
