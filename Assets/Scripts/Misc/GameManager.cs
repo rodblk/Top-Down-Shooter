@@ -66,7 +66,6 @@ public class GameManager : MonoBehaviour
     private void AddScore()
     {
         Score++;
-        // playerScoreTxt.text = $"Score: {score}";
     }
 
     public void GoToProfile()
@@ -83,21 +82,11 @@ public class GameManager : MonoBehaviour
 
     public void SaveScore()
     {
-        try
+        Debug.Log("E PRA SUBIR PONTUACAO");
+
+        StartCoroutine(ServerConnect.instance.SaveScoreEverywhere("Robson", score, () =>
         {
-            StartCoroutine(ServerConnect.instance.PostScore(ServerConnect.DBNames.MySQL, SigninSampleScript.instance.user.DisplayName, Score));
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            Debug.Log("Could not access database");
-            // throw;
-        }
-        finally
-        {
-            // Chama pra mostrar highscore
             ScoreManager.instance.ShowHighScore();
-        }
-        
+        }));
     }
 }

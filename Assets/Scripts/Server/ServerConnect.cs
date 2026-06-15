@@ -29,8 +29,8 @@ namespace Server
         [System.Serializable]
         public class ScoreEntry
         {
-            public string Name;
-            public int Score;
+            public string name;
+            public int score;
         }
  
         [System.Serializable]
@@ -57,50 +57,7 @@ namespace Server
             MySQL,
             Postgres
         }
-        
-        // public IEnumerator SaveScoreToMySQL(string username, int score)
-        // {
-        //     WWWForm form = new WWWForm();
-        //     form.AddField("username", username);
-        //     form.AddField("score", score);
-        //
-        //     UnityWebRequest request = UnityWebRequest.Post("http://192.168.1.18/shootersql/register_score.php", form);
-        //
-        //     yield return request.SendWebRequest();
-        //
-        //     Debug.Log(request.result);
-        //     Debug.Log(request.error);
-        //     Debug.Log(request.downloadHandler.text);
-        //
-        //     if (request.error == null)
-        //         ScoreManager.serverResponse = request.downloadHandler.text.Split("*");
-        //     else
-        //         ScoreManager.serverResponse = null;
-        //
-        //     request.Dispose();
-        // }
 
-        // public IEnumerator GetPlayerHighScore(TextMeshProUGUI playerBestScoreTxt)
-        // {
-        //     WWWForm form = new WWWForm();
-        //     form.AddField("username", SigninSampleScript.instance.user.DisplayName);
-        //     
-        //     UnityWebRequest request = UnityWebRequest.Post("http://192.168.1.18/shootersql/get_player_info.php", form);
-        //
-        //     yield return request.SendWebRequest();
-        //     
-        //     if (request.error == null)
-        //     {
-        //         // var result = request.downloadHandler.text;
-        //
-        //         playerBestScoreTxt.text = $"Best score: {request.downloadHandler.text}";
-        //     }
-        //     else
-        //         Debug.Log("Data retrieve failed");
-        //     
-        //     request.Dispose();
-        // }
-        
         public IEnumerator GetScores(DBNames dbname, int limit = 10, System.Action<ScoreEntry[]> onComplete = null)
         {
             string path;
@@ -119,6 +76,8 @@ namespace Server
             
             using var req = UnityWebRequest.Get($"{BASE_URL}/{path}?limit={limit}");
             req.SetRequestHeader("Content-Type", "application/json");
+
+            Debug.Log($"{BASE_URL}/{path}?limit={limit}");
  
             yield return req.SendWebRequest();
  
@@ -161,7 +120,7 @@ namespace Server
                 var res = JsonUtility.FromJson<ScoresResponse>(req.downloadHandler.text);
                 Debug.Log(res);
                 if (res != null)
-                    text.text = "Best score: " + res.scores[0].Score.ToString();
+                    text.text = "Best score: " + res.scores[0].score.ToString();
                 else
                     text.text = "Best score: " + "0";
             }
@@ -174,6 +133,7 @@ namespace Server
         
         public IEnumerator PostScore(DBNames dbname, string playerName, int score)
         {
+            Debug.Log($"CHEGOU NO POST DO {dbname}");
             string path;
             switch (dbname)
             {
@@ -190,12 +150,14 @@ namespace Server
             
             var bodyData = new PostScoreBody { name = playerName, score = score };
             string json = JsonUtility.ToJson(bodyData);
+
+            Debug.Log($"{BASE_URL}/{path}");
  
             using var req = new UnityWebRequest($"{BASE_URL}/{path}", "POST");
             req.uploadHandler   = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
             req.downloadHandler = new DownloadHandlerBuffer();
             req.SetRequestHeader("Content-Type", "application/json");
- 
+
             yield return req.SendWebRequest();
  
             if (req.result == UnityWebRequest.Result.Success)
@@ -208,6 +170,26 @@ namespace Server
                 Debug.LogError("Erro ao enviar score: " + req.downloadHandler.text);
             }
         }
+        
+        public IEnumerator SaveScoreEverywhere(string playerName, int score, System.Action onAllDone = null)
+        {
+            Debug.Log("ENTROU NO SAVE TUDO");
+            // Inicia as 4 requisições ao mesmo tempo
+            var mysqlReq    = StartCoroutine(PostScore(DBNames.MySQL,    playerName, score));
+            var postgresReq = StartCoroutine(PostScore(DBNames.Postgres, playerName, score));
+            // var mongoReq    = StartCoroutine(PostScore(mongoUrl,    json, "MongoDB"));
+            // var dynamoReq   = StartCoroutine(PostScore(dynamoUrl,   json, "DynamoDB"));
+ 
+            // Espera todas terminarem
+            yield return mysqlReq;
+            yield return postgresReq;
+            // yield return mongoReq;
+            // yield return dynamoReq;
+ 
+            Debug.Log("Pontuação enviada para todos os bancos.");
+            onAllDone?.Invoke();
+        }
+
 
 
         
